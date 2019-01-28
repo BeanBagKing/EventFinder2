@@ -101,6 +101,10 @@ namespace EventFinder
                             var xml = XDocument.Parse(eventRecord.ToXml());
                             XNamespace ns = xml.Root.GetDefaultNamespace();
 
+                            string LevelDisplayName = "";
+                            string OpcodeDisplayName = "";
+                            string TaskDisplayName = "";
+
                             // Collect ALL THE THINGS!
                             string Message = eventRecord.FormatDescription();
                             string SystemTime = xml.Root.Element(ns + "System").Element(ns + "TimeCreated").Attribute("SystemTime").Value;
@@ -123,9 +127,32 @@ namespace EventFinder
                             string ActivityId = eventRecord.ActivityId.ToString();
                             string RelatedActivityId = eventRecord.RelatedActivityId.ToString();
                             string Hashcode = eventRecord.GetHashCode().ToString();
-                            string LevelDisplayName = eventRecord.LevelDisplayName;
-                            string OpcodeDisplayName = eventRecord.OpcodeDisplayName;
-                            string TaskDisplayName = eventRecord.TaskDisplayName;
+                            try // I have no idea why the below try/catch statements are necessary. However, I found at least one log that would crash if they aren't there.
+                            {   // https://github.com/BeanBagKing/EventFinder2/issues/1
+                                LevelDisplayName = eventRecord.LevelDisplayName;
+                            } catch
+                            {
+                                LevelDisplayName = eventRecord.LevelDisplayName;
+                            }
+                            try
+                            {
+                                OpcodeDisplayName = eventRecord.OpcodeDisplayName;
+                            }
+                            catch
+                            {
+                                OpcodeDisplayName = eventRecord.OpcodeDisplayName;
+                            }
+                            try
+                            {
+                                TaskDisplayName = eventRecord.TaskDisplayName;
+                            }
+                            catch
+                            {
+                                TaskDisplayName = eventRecord.TaskDisplayName;
+                            }
+                            //string LevelDisplayName = eventRecord.LevelDisplayName;
+                            //string OpcodeDisplayName = eventRecord.OpcodeDisplayName;
+                            //string TaskDisplayName = eventRecord.TaskDisplayName;
 
                             // Add them to the record. The things equal the things.
                             records.Add(new Record() { Message = Message, SystemTime = SystemTime, Id = Id, Version = Version, Qualifiers = Qualifiers, Level = Level, Task = Task, Opcode = Opcode, Keywords = Keywords, RecordId = RecordId, ProviderName = ProviderName, ProviderID = ProviderID, LogName = LogName, ProcessId = ProcessId, ThreadId = ThreadId, MachineName = MachineName, UserID = UserID, TimeCreated = TimeCreated, ActivityId = ActivityId, RelatedActivityId = RelatedActivityId, Hashcode = Hashcode, LevelDisplayName = LevelDisplayName, OpcodeDisplayName = OpcodeDisplayName, TaskDisplayName = TaskDisplayName });
