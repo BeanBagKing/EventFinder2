@@ -125,7 +125,7 @@
             this.Controls.Add(this.EventRangeBox);
             this.Controls.Add(this.Status);
             this.Name = "FindEvents";
-            this.Text = "FindEvents";
+            this.Text = "EventFinder 2.0";
             this.EventRangeBox.ResumeLayout(false);
             this.EventRangeBox.PerformLayout();
             this.Status.ResumeLayout(false);
