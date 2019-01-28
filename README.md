@@ -27,4 +27,4 @@ via logs what this malware did and in what order, which may be used to create IO
 * Wait while the program generates a CSV of found events on the current desktop - File name will be "Logs_Runtime_\<datestamp>_\<runtime>.csv"
 
 # Screenshot Time!
-![EventFinder](https://raw.githubusercontent.com/BeanBagKing/EventFinder/master/EventFinder.png)
+![EventFinder](https://raw.githubusercontent.com/BeanBagKing/EventFinder2/master/EventFinder2.jpg)
