@@ -101,58 +101,227 @@ namespace EventFinder
                             var xml = XDocument.Parse(eventRecord.ToXml());
                             XNamespace ns = xml.Root.GetDefaultNamespace();
 
+                            string Message = "";
+                            string SystemTime = "";
+                            string Id = "";
+                            string Version = "";
+                            string Qualifiers = "";
+                            string Level = "";
+                            string Task = "";
+                            string Opcode = "";
+                            string Keywords = "";
+                            string RecordId = "";
+                            string ProviderName = "";
+                            string ProviderID = "";
+                            string LogName = "";
+                            string ProcessId = "";
+                            string ThreadId = "";
+                            string MachineName = "";
+                            string UserID = "";
+                            string TimeCreated = "";
+                            string ActivityId = "";
+                            string RelatedActivityId = "";
+                            string Hashcode = "";
                             string LevelDisplayName = "";
                             string OpcodeDisplayName = "";
                             string TaskDisplayName = "";
 
-                            // Collect ALL THE THINGS!
-                            string Message = eventRecord.FormatDescription();
-                            string SystemTime = xml.Root.Element(ns + "System").Element(ns + "TimeCreated").Attribute("SystemTime").Value;
-                            string Id = eventRecord.Id.ToString();
-                            string Version = eventRecord.Version.ToString();
-                            string Qualifiers = eventRecord.Qualifiers.ToString();
-                            string Level = eventRecord.Level.ToString();
-                            string Task = eventRecord.Task.ToString();
-                            string Opcode = eventRecord.Opcode.ToString();
-                            string Keywords = eventRecord.Keywords.ToString();
-                            string RecordId = eventRecord.RecordId.ToString();
-                            string ProviderName = eventRecord.ProviderName;
-                            string ProviderID = eventRecord.ProviderId.ToString();
-                            string LogName = eventRecord.LogName;
-                            string ProcessId = eventRecord.ProcessId.ToString();
-                            string ThreadId = eventRecord.ThreadId.ToString();
-                            string MachineName = eventRecord.MachineName;
-                            string UserID = eventRecord.UserId?.ToString();
-                            string TimeCreated = eventRecord.TimeCreated.ToString();
-                            string ActivityId = eventRecord.ActivityId.ToString();
-                            string RelatedActivityId = eventRecord.RelatedActivityId.ToString();
-                            string Hashcode = eventRecord.GetHashCode().ToString();
-                            try // I have no idea why the below try/catch statements are necessary. However, I found at least one log that would crash if they aren't there.
-                            {   // https://github.com/BeanBagKing/EventFinder2/issues/1
-                                LevelDisplayName = eventRecord.LevelDisplayName;
-                            } catch
+                            // Debugging Stuff
+                            //Console.WriteLine("-- STARTING --");
+                            // Try to collect all the things. Catch them if we can't.
+                            try
+                            {
+                                Message = eventRecord.FormatDescription();
+                            }
+                            catch
+                            {
+                                //Console.WriteLine("Error on FormatDescription");
+                          }
+                            try
+                            {
+                                SystemTime = xml.Root.Element(ns + "System").Element(ns + "TimeCreated").Attribute("SystemTime").Value;
+                            }
+                            catch
+                            {
+                                //Console.WriteLine("Error on SystemTime");
+                          }
+                            try
+                            {
+                                Id = eventRecord.Id.ToString();
+                            }
+                            catch
+                            {
+                                //Console.WriteLine("Error on Id");
+                          }
+                            try
+                            {
+                                Version = eventRecord.Version.ToString();
+                            }
+                            catch
+                            {
+                                //Console.WriteLine("Error on Version");
+                          }
+                            try
+                            {
+                                Qualifiers = eventRecord.Qualifiers.ToString();
+                            }
+                            catch
+                            {
+                                //Console.WriteLine("Error on Qualifiers");
+                          }
+                            try
+                            {
+                                Level = eventRecord.Level.ToString();
+                            }
+                            catch
+                            {
+                                //Console.WriteLine("Error on Level");
+                          }
+                            try
+                            {
+                                Task = eventRecord.Task.ToString();
+                            }
+                            catch
+                            {
+                                //Console.WriteLine("Error on Task");
+                          }
+                            try
+                            {
+                                Opcode = eventRecord.Opcode.ToString();
+                            }
+                            catch
+                            {
+                                //Console.WriteLine("Error on Opcode");
+                          }
+                            try
+                            {
+                                Keywords = eventRecord.Keywords.ToString();
+                            }
+                            catch
+                            {
+                                //Console.WriteLine("Error on Keywords");
+                          }
+                            try
+                            {
+                                RecordId = eventRecord.RecordId.ToString();
+                            }
+                            catch
+                            {
+                                //Console.WriteLine("Error on RecordId");
+                          }
+                            try
+                            {
+                                ProviderName = eventRecord.ProviderName;
+                            }
+                            catch
+                            {
+                                //Console.WriteLine("Error on ProviderName");
+                          }
+                            try
+                            {
+                                ProviderID = eventRecord.ProviderId.ToString();
+                            }
+                            catch
+                            {
+                                //Console.WriteLine("Error on ProviderId");
+                          }
+                            try
+                            {
+                                LogName = eventRecord.LogName;
+                            }
+                            catch
+                            {
+                                //Console.WriteLine("Error on LogName");
+                          }
+                            try
+                            {
+                                ProcessId = eventRecord.ProcessId.ToString();
+                            }
+                            catch
+                            {
+                                //Console.WriteLine("Error on ProcessId");
+                          }
+                            try
+                            {
+                                ThreadId = eventRecord.ThreadId.ToString();
+                            }
+                            catch
+                            {
+                                //Console.WriteLine("Error on ThreadId");
+                          }
+                            try
+                            {
+                                MachineName = eventRecord.MachineName;
+                            }
+                            catch
+                            {
+                                //Console.WriteLine("Error on eventRecord");
+                          }
+                            try
+                            {
+                                UserID = eventRecord.UserId?.ToString();
+                            }
+                            catch
+                            {
+                                //Console.WriteLine("Error on UserId");
+                          }
+                            try
+                            {
+                                TimeCreated = eventRecord.TimeCreated.ToString();
+                            }
+                            catch
+                            {
+                                //Console.WriteLine("Error on TimeCreated");
+                          }
+                            try
+                            {
+                                ActivityId = eventRecord.ActivityId.ToString();
+                            }
+                            catch
+                            {
+                                //Console.WriteLine("Error on ActivityId");
+                          }
+                            try
+                            {
+                                RelatedActivityId = eventRecord.RelatedActivityId.ToString();
+                            }
+                            catch
+                            {
+                                //Console.WriteLine("Error on RelatedActivityId");
+                          }
+                            try
+                            {
+                                Hashcode = eventRecord.GetHashCode().ToString();
+                            }
+                            catch
+                            {
+                                //Console.WriteLine("Error on GetHashCode");
+                          }
+                            try
                             {
                                 LevelDisplayName = eventRecord.LevelDisplayName;
                             }
+                            catch
+                            {
+                                //Console.WriteLine("Error on LevelDisplayName");
+                          }
                             try
                             {
                                 OpcodeDisplayName = eventRecord.OpcodeDisplayName;
                             }
                             catch
                             {
-                                OpcodeDisplayName = eventRecord.OpcodeDisplayName;
-                            }
+                                //Console.WriteLine("Error on OpcodeDisplayName");
+                          }
                             try
                             {
                                 TaskDisplayName = eventRecord.TaskDisplayName;
                             }
                             catch
                             {
-                                TaskDisplayName = eventRecord.TaskDisplayName;
-                            }
-                            //string LevelDisplayName = eventRecord.LevelDisplayName;
-                            //string OpcodeDisplayName = eventRecord.OpcodeDisplayName;
-                            //string TaskDisplayName = eventRecord.TaskDisplayName;
+                                //Console.WriteLine("Error on TaskDisplayName");
+                          }
+                            //Console.WriteLine("-- ENDING --");
 
                             // Add them to the record. The things equal the things.
                             records.Add(new Record() { Message = Message, SystemTime = SystemTime, Id = Id, Version = Version, Qualifiers = Qualifiers, Level = Level, Task = Task, Opcode = Opcode, Keywords = Keywords, RecordId = RecordId, ProviderName = ProviderName, ProviderID = ProviderID, LogName = LogName, ProcessId = ProcessId, ThreadId = ThreadId, MachineName = MachineName, UserID = UserID, TimeCreated = TimeCreated, ActivityId = ActivityId, RelatedActivityId = RelatedActivityId, Hashcode = Hashcode, LevelDisplayName = LevelDisplayName, OpcodeDisplayName = OpcodeDisplayName, TaskDisplayName = TaskDisplayName });
@@ -176,6 +345,7 @@ namespace EventFinder
                 }
                 StatusOutput.Text = "Run Complete";
                 StatusOutput.ForeColor = System.Drawing.Color.Blue;
+                records.Clear();
             }
             FindEventsButton.Enabled = true;
         }
