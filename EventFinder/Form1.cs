@@ -20,6 +20,15 @@ namespace EventFinder
 {
     public partial class FindEvents : Form
     {
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AboutBox box = new AboutBox();
+            box.ShowDialog();
+        }
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            System.Windows.Forms.Application.Exit();
+        }
         public FindEvents()
         {
             InitializeComponent();
@@ -131,6 +140,8 @@ namespace EventFinder
                             // Try to collect all the things. Catch them if we can't.
                             // Sometimes fields are null or cannot be converted to string (why?).
                             // If they are, catch and do nothing, so they will stay empty ("").
+                            // This has primarily been LevelDisplayName, OpcodeDisplayName, and TaskDisplayName
+                            // but we'll catch it all anyway
                             // https://github.com/BeanBagKing/EventFinder2/issues/1
                             try
                             {
@@ -399,6 +410,7 @@ namespace EventFinder
             }
             FindEventsButton.Enabled = true;
         }
+
     }
 }
 
