@@ -129,7 +129,9 @@ namespace EventFinder
                             // Debugging Stuff
                             //Console.WriteLine("-- STARTING --");
                             // Try to collect all the things. Catch them if we can't.
-                            // Sometimes fields are null
+                            // Sometimes fields are null or cannot be converted to string (why?).
+                            // If they are, catch and do nothing, so they will stay empty ("").
+                            // https://github.com/BeanBagKing/EventFinder2/issues/1
                             try
                             {
                                 Message = eventRecord.FormatDescription();
@@ -335,34 +337,48 @@ namespace EventFinder
                     }
                     catch (Exception ex)
                     {
-                        bool isElevated;
-                        using (WindowsIdentity identity = WindowsIdentity.GetCurrent())
+                        if (Log.ToString().Equals("Microsoft-RMS-MSIPC/Debug"))
                         {
-                            WindowsPrincipal principal = new WindowsPrincipal(identity);
-                            isElevated = principal.IsInRole(WindowsBuiltInRole.Administrator);
+                            // Known issue, do nothing
+                            // https://github.com/BeanBagKing/EventFinder2/issues/3
                         }
-                        using (StreamWriter writer = new StreamWriter(DesktopPath + "\\ERROR_EventFinder_" + RunTime + ".txt", append:true))
+                        else if (Log.ToString().Equals("Microsoft-Windows-USBVideo/Analytic"))
                         {
-                            writer.WriteLine("-----------------------------------------------------------------------------");
-                            writer.WriteLine("Issue Submission: https://github.com/BeanBagKing/EventFinder2/issues");
-                            writer.WriteLine("Date : " + DateTime.Now.ToString());
-                            writer.WriteLine("Log : " + Log);
-                            writer.WriteLine("Admin Status: " + isElevated);
-                            writer.WriteLine();
-
-                            while (ex != null)
+                            // Known issue, do nothing
+                            // https://github.com/BeanBagKing/EventFinder2/issues/2
+                        }
+                        else
+                        {
+                            // Unknown issue! Write us a bug report
+                            bool isElevated;
+                            using (WindowsIdentity identity = WindowsIdentity.GetCurrent())
                             {
-                                writer.WriteLine(ex.GetType().FullName);
-                                writer.WriteLine("Message : " + ex.Message);
-                                writer.WriteLine("StackTrace : " + ex.StackTrace);
-                                writer.WriteLine("Data : " + ex.Data);
-                                writer.WriteLine("HelpLink : " + ex.HelpLink);
-                                writer.WriteLine("HResult : " + ex.HResult);
-                                writer.WriteLine("InnerException : " + ex.InnerException);
-                                writer.WriteLine("Source : " + ex.Source);
-                                writer.WriteLine("TargetSite : " + ex.TargetSite);
+                                WindowsPrincipal principal = new WindowsPrincipal(identity);
+                                isElevated = principal.IsInRole(WindowsBuiltInRole.Administrator);
+                            }
+                            using (StreamWriter writer = new StreamWriter(DesktopPath + "\\ERROR_EventFinder_" + RunTime + ".txt", append: true))
+                            {
+                                writer.WriteLine("-----------------------------------------------------------------------------");
+                                writer.WriteLine("Issue Submission: https://github.com/BeanBagKing/EventFinder2/issues");
+                                writer.WriteLine("Date : " + DateTime.Now.ToString());
+                                writer.WriteLine("Log : " + Log);
+                                writer.WriteLine("Admin Status: " + isElevated);
+                                writer.WriteLine();
 
-                                ex = ex.InnerException;
+                                while (ex != null)
+                                {
+                                    writer.WriteLine(ex.GetType().FullName);
+                                    writer.WriteLine("Message : " + ex.Message);
+                                    writer.WriteLine("StackTrace : " + ex.StackTrace);
+                                    writer.WriteLine("Data : " + ex.Data);
+                                    writer.WriteLine("HelpLink : " + ex.HelpLink);
+                                    writer.WriteLine("HResult : " + ex.HResult);
+                                    writer.WriteLine("InnerException : " + ex.InnerException);
+                                    writer.WriteLine("Source : " + ex.Source);
+                                    writer.WriteLine("TargetSite : " + ex.TargetSite);
+
+                                    ex = ex.InnerException;
+                                }
                             }
                         }
                     }
