@@ -330,8 +330,12 @@ namespace EventFinder
                     catch (UnauthorizedAccessException)
                     {
                         // If you are running as admin, you will get unauthorized for some logs. Hey, I warned you! Nothing to do here.
+                        // Catching this seperately since we know what happened.
                     }
-
+                    catch
+                    {
+                        // All other exceptions
+                    }
 
                 }
 
