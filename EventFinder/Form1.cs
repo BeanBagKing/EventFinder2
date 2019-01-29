@@ -335,12 +335,19 @@ namespace EventFinder
                     }
                     catch (Exception ex)
                     {
-
+                        bool isElevated;
+                        using (WindowsIdentity identity = WindowsIdentity.GetCurrent())
+                        {
+                            WindowsPrincipal principal = new WindowsPrincipal(identity);
+                            isElevated = principal.IsInRole(WindowsBuiltInRole.Administrator);
+                        }
                         using (StreamWriter writer = new StreamWriter(DesktopPath + "\\ERROR_EventFinder_" + RunTime + ".txt", append:true))
                         {
                             writer.WriteLine("-----------------------------------------------------------------------------");
+                            writer.WriteLine("Issue Submission: https://github.com/BeanBagKing/EventFinder2/issues");
                             writer.WriteLine("Date : " + DateTime.Now.ToString());
                             writer.WriteLine("Log : " + Log);
+                            writer.WriteLine("Admin Status: " + isElevated);
                             writer.WriteLine();
 
                             while (ex != null)
@@ -348,6 +355,12 @@ namespace EventFinder
                                 writer.WriteLine(ex.GetType().FullName);
                                 writer.WriteLine("Message : " + ex.Message);
                                 writer.WriteLine("StackTrace : " + ex.StackTrace);
+                                writer.WriteLine("Data : " + ex.Data);
+                                writer.WriteLine("HelpLink : " + ex.HelpLink);
+                                writer.WriteLine("HResult : " + ex.HResult);
+                                writer.WriteLine("InnerException : " + ex.InnerException);
+                                writer.WriteLine("Source : " + ex.Source);
+                                writer.WriteLine("TargetSite : " + ex.TargetSite);
 
                                 ex = ex.InnerException;
                             }
