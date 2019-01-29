@@ -129,6 +129,7 @@ namespace EventFinder
                             // Debugging Stuff
                             //Console.WriteLine("-- STARTING --");
                             // Try to collect all the things. Catch them if we can't.
+                            // Sometimes fields are null
                             try
                             {
                                 Message = eventRecord.FormatDescription();
@@ -332,9 +333,25 @@ namespace EventFinder
                         // If you are running as admin, you will get unauthorized for some logs. Hey, I warned you! Nothing to do here.
                         // Catching this seperately since we know what happened.
                     }
-                    catch
+                    catch (Exception ex)
                     {
-                        // All other exceptions
+
+                        using (StreamWriter writer = new StreamWriter(DesktopPath + "\\ERROR_EventFinder_" + RunTime + ".txt", append:true))
+                        {
+                            writer.WriteLine("-----------------------------------------------------------------------------");
+                            writer.WriteLine("Date : " + DateTime.Now.ToString());
+                            writer.WriteLine("Log : " + Log);
+                            writer.WriteLine();
+
+                            while (ex != null)
+                            {
+                                writer.WriteLine(ex.GetType().FullName);
+                                writer.WriteLine("Message : " + ex.Message);
+                                writer.WriteLine("StackTrace : " + ex.StackTrace);
+
+                                ex = ex.InnerException;
+                            }
+                        }
                     }
 
                 }
