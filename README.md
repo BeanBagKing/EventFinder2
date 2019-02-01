@@ -1,6 +1,8 @@
 # EventFinder2
 Finds event logs between two time points. Useful for support/malware analysis.
 
+Blog: https://nullsec.us/eventfinder2-finding/
+
 # About
 This program allows you to mark (or set) a beginning and end time period, then grabs all
 events between those periods. It dumps these to a sorted CSV on the desktop. 
