@@ -28,5 +28,9 @@ via logs what this malware did and in what order, which may be used to create IO
 * Click Find Events
 * Wait while the program generates a CSV of found events on the current desktop - File name will be "Logs_Runtime_\<datestamp>_\<runtime>.csv"
 
+# Demonstration Video
+Thanks to Richard Davis of 13cubed for doing a short on usage and demoing the tool!
+https://www.youtube.com/watch?v=bs756-juO_U
+
 # Screenshot Time!
 ![EventFinder](https://raw.githubusercontent.com/BeanBagKing/EventFinder2/master/EventFinder2.jpg)
