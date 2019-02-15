@@ -31,7 +31,7 @@ via logs what this malware did and in what order, which may be used to create IO
 # Demonstration Video
 Thanks to Richard Davis of 13cubed for doing a short on usage and demoing the tool!
 
-https://www.youtube.com/watch?v=bs756-juO_U
+[![EventFinder2 Demo](https://img.youtube.com/vi/bs756-juO_U/0.jpg)](https://www.youtube.com/watch?v=bs756-juO_U "EventFinder2 Demo")
 
 # Screenshot Time!
 ![EventFinder](https://raw.githubusercontent.com/BeanBagKing/EventFinder2/master/EventFinder2.jpg)
