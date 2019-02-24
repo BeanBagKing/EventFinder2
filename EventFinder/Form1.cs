@@ -132,6 +132,7 @@ namespace EventFinder
                 } else
                 {
                     MessageBox.Show("Something Wrong:\nYou likely selected an invalid path");
+                    FindEventsButton.Enabled = true;
                     return;
                 }
                 
