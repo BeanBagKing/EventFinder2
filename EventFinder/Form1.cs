@@ -45,7 +45,8 @@ namespace EventFinder
             {
                 StatusOutput.Text = "Running as Administrator.\nRestricted logs will be enumerated.";
                 StatusOutput.ForeColor = System.Drawing.Color.Green;
-            } else
+            }
+            else
             {
                 StatusOutput.Text = "Not running as Administrator!\nYou will not be able to read Security, etc.";
                 StatusOutput.ForeColor = System.Drawing.Color.Red;
@@ -66,6 +67,28 @@ namespace EventFinder
             EndInput.Text = CurrentTime;
         }
 
+        // Where do we want to get events from?
+        private void folderButton_Click(object sender, EventArgs e)
+        {
+            currentPath.Text = "";
+            FolderBrowserDialog fbd = new FolderBrowserDialog();
+            currentSystem.Checked = false;
+            dirPath.Checked = true;
+
+            if (fbd.ShowDialog() != System.Windows.Forms.DialogResult.OK)
+            {
+                currentPath.Text = "Invalid Folder";
+            } else
+            {
+                currentPath.Text = fbd.SelectedPath;
+            }
+        }
+
+        private void currentPath_TextChanged(object sender, EventArgs e)
+        {
+            
+        }
+
         // Our Find Events button, this is where the magic happens
         private void FindEventsButton_Click(object sender, EventArgs e)
         {
@@ -75,15 +98,18 @@ namespace EventFinder
             {
                 StatusOutput.Text = "Missing Start or End Time!";
                 StatusOutput.ForeColor = System.Drawing.Color.Red;
-            } else if (!DateTime.TryParse(StartInput.Text, out DateTime temp))  // And that the start time is valid
+            }
+            else if (!DateTime.TryParse(StartInput.Text, out DateTime temp))  // And that the start time is valid
             {
                 StatusOutput.Text = "Invalid Start Time";
                 StatusOutput.ForeColor = System.Drawing.Color.Red;
-            } else if (!DateTime.TryParse(EndInput.Text, out DateTime temp2))   // And that the end time is valid
+            }
+            else if (!DateTime.TryParse(EndInput.Text, out DateTime temp2))   // And that the end time is valid
             {
                 StatusOutput.Text = "Invalid End Time";
                 StatusOutput.ForeColor = System.Drawing.Color.Red;
-            } else                                                              // If everything is valid, run!
+            }
+            else                                                              // If everything is valid, run!
             {
 
 
@@ -94,6 +120,21 @@ namespace EventFinder
                 string RunTime = DateTime.Now.ToString("yyyyMMdd_HHmmss");                              // Needed for file name
                 EventLogSession Session = new EventLogSession();
                 var Logs = Session.GetLogNames().ToList();
+                var pathType = PathType.LogName;
+                if (currentSystem.Checked == true)
+                {
+                    Logs = Session.GetLogNames().ToList();
+                    pathType = PathType.LogName;
+                } else if (System.IO.Directory.Exists(currentPath.Text))
+                {
+                    Logs = System.IO.Directory.GetFiles(currentPath.Text, "*.evtx").ToList();
+                    pathType = PathType.FilePath;
+                } else
+                {
+                    MessageBox.Show("Something Wrong:\nYou likely selected an invalid path");
+                    return;
+                }
+                
                 var query = string.Format(@"*[System[TimeCreated[@SystemTime >= '{0}']]] and *[System[TimeCreated[@SystemTime <= '{1}']]]", StartTime.ToUniversalTime().ToString("o"), EndTime.ToUniversalTime().ToString("o"));
                 List<Record> records = new List<Record> { };                                            // Start a list for all those sweet sweet logs we're going to get 
 
@@ -101,7 +142,7 @@ namespace EventFinder
                 {
                     try
                     {
-                        EventLogQuery eventlogQuery = new EventLogQuery(Log, PathType.LogName, query);
+                        EventLogQuery eventlogQuery = new EventLogQuery(Log, pathType, query);
                         EventLogReader eventlogReader = new EventLogReader(eventlogQuery);
 
                         for (EventRecord eventRecord = eventlogReader.ReadEvent(); null != eventRecord; eventRecord = eventlogReader.ReadEvent())
@@ -150,7 +191,7 @@ namespace EventFinder
                             catch
                             {
                                 //Console.WriteLine("Error on FormatDescription");
-                          }
+                            }
                             try
                             {
                                 SystemTime = xml.Root.Element(ns + "System").Element(ns + "TimeCreated").Attribute("SystemTime").Value;
@@ -158,7 +199,7 @@ namespace EventFinder
                             catch
                             {
                                 //Console.WriteLine("Error on SystemTime");
-                          }
+                            }
                             try
                             {
                                 Id = eventRecord.Id.ToString();
@@ -166,7 +207,7 @@ namespace EventFinder
                             catch
                             {
                                 //Console.WriteLine("Error on Id");
-                          }
+                            }
                             try
                             {
                                 Version = eventRecord.Version.ToString();
@@ -174,7 +215,7 @@ namespace EventFinder
                             catch
                             {
                                 //Console.WriteLine("Error on Version");
-                          }
+                            }
                             try
                             {
                                 Qualifiers = eventRecord.Qualifiers.ToString();
@@ -182,7 +223,7 @@ namespace EventFinder
                             catch
                             {
                                 //Console.WriteLine("Error on Qualifiers");
-                          }
+                            }
                             try
                             {
                                 Level = eventRecord.Level.ToString();
@@ -190,7 +231,7 @@ namespace EventFinder
                             catch
                             {
                                 //Console.WriteLine("Error on Level");
-                          }
+                            }
                             try
                             {
                                 Task = eventRecord.Task.ToString();
@@ -198,7 +239,7 @@ namespace EventFinder
                             catch
                             {
                                 //Console.WriteLine("Error on Task");
-                          }
+                            }
                             try
                             {
                                 Opcode = eventRecord.Opcode.ToString();
@@ -206,7 +247,7 @@ namespace EventFinder
                             catch
                             {
                                 //Console.WriteLine("Error on Opcode");
-                          }
+                            }
                             try
                             {
                                 Keywords = eventRecord.Keywords.ToString();
@@ -214,7 +255,7 @@ namespace EventFinder
                             catch
                             {
                                 //Console.WriteLine("Error on Keywords");
-                          }
+                            }
                             try
                             {
                                 RecordId = eventRecord.RecordId.ToString();
@@ -222,7 +263,7 @@ namespace EventFinder
                             catch
                             {
                                 //Console.WriteLine("Error on RecordId");
-                          }
+                            }
                             try
                             {
                                 ProviderName = eventRecord.ProviderName;
@@ -230,7 +271,7 @@ namespace EventFinder
                             catch
                             {
                                 //Console.WriteLine("Error on ProviderName");
-                          }
+                            }
                             try
                             {
                                 ProviderID = eventRecord.ProviderId.ToString();
@@ -238,7 +279,7 @@ namespace EventFinder
                             catch
                             {
                                 //Console.WriteLine("Error on ProviderId");
-                          }
+                            }
                             try
                             {
                                 LogName = eventRecord.LogName;
@@ -246,7 +287,7 @@ namespace EventFinder
                             catch
                             {
                                 //Console.WriteLine("Error on LogName");
-                          }
+                            }
                             try
                             {
                                 ProcessId = eventRecord.ProcessId.ToString();
@@ -254,7 +295,7 @@ namespace EventFinder
                             catch
                             {
                                 //Console.WriteLine("Error on ProcessId");
-                          }
+                            }
                             try
                             {
                                 ThreadId = eventRecord.ThreadId.ToString();
@@ -262,7 +303,7 @@ namespace EventFinder
                             catch
                             {
                                 //Console.WriteLine("Error on ThreadId");
-                          }
+                            }
                             try
                             {
                                 MachineName = eventRecord.MachineName;
@@ -270,7 +311,7 @@ namespace EventFinder
                             catch
                             {
                                 //Console.WriteLine("Error on eventRecord");
-                          }
+                            }
                             try
                             {
                                 UserID = eventRecord.UserId?.ToString();
@@ -278,7 +319,7 @@ namespace EventFinder
                             catch
                             {
                                 //Console.WriteLine("Error on UserId");
-                          }
+                            }
                             try
                             {
                                 TimeCreated = eventRecord.TimeCreated.ToString();
@@ -286,7 +327,7 @@ namespace EventFinder
                             catch
                             {
                                 //Console.WriteLine("Error on TimeCreated");
-                          }
+                            }
                             try
                             {
                                 ActivityId = eventRecord.ActivityId.ToString();
@@ -294,7 +335,7 @@ namespace EventFinder
                             catch
                             {
                                 //Console.WriteLine("Error on ActivityId");
-                          }
+                            }
                             try
                             {
                                 RelatedActivityId = eventRecord.RelatedActivityId.ToString();
@@ -302,7 +343,7 @@ namespace EventFinder
                             catch
                             {
                                 //Console.WriteLine("Error on RelatedActivityId");
-                          }
+                            }
                             try
                             {
                                 Hashcode = eventRecord.GetHashCode().ToString();
@@ -310,7 +351,7 @@ namespace EventFinder
                             catch
                             {
                                 //Console.WriteLine("Error on GetHashCode");
-                          }
+                            }
                             try
                             {
                                 LevelDisplayName = eventRecord.LevelDisplayName;
@@ -318,7 +359,7 @@ namespace EventFinder
                             catch
                             {
                                 //Console.WriteLine("Error on LevelDisplayName");
-                          }
+                            }
                             try
                             {
                                 OpcodeDisplayName = eventRecord.OpcodeDisplayName;
@@ -326,7 +367,7 @@ namespace EventFinder
                             catch
                             {
                                 //Console.WriteLine("Error on OpcodeDisplayName");
-                          }
+                            }
                             try
                             {
                                 TaskDisplayName = eventRecord.TaskDisplayName;
@@ -334,7 +375,7 @@ namespace EventFinder
                             catch
                             {
                                 //Console.WriteLine("Error on TaskDisplayName");
-                          }
+                            }
                             //Console.WriteLine("-- ENDING --");
 
                             // Add them to the record. The things equal the things.
@@ -396,7 +437,7 @@ namespace EventFinder
 
                 }
 
-                records.OrderBy(x => x.SystemTime); // Sort our records in chronological order
+                records = records.OrderBy(x => x.SystemTime).ToList(); // Sort our records in chronological order
                 // and write them to a CSV
                 using (var writer = new StreamWriter(DesktopPath + "\\Logs_Runtime_" + RunTime + ".csv", append: true))
                 using (var csv = new CsvWriter(writer))
@@ -410,7 +451,6 @@ namespace EventFinder
             }
             FindEventsButton.Enabled = true;
         }
-
     }
 }
 
