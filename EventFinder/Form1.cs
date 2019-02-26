@@ -15,6 +15,7 @@ using System.Windows.Forms;
 using System.IO;
 using CsvHelper;
 using System.Security.Principal;
+using System.Globalization;
 
 namespace EventFinder
 {
@@ -145,7 +146,6 @@ namespace EventFinder
                     {
                         EventLogQuery eventlogQuery = new EventLogQuery(Log, pathType, query);
                         EventLogReader eventlogReader = new EventLogReader(eventlogQuery);
-
                         for (EventRecord eventRecord = eventlogReader.ReadEvent(); null != eventRecord; eventRecord = eventlogReader.ReadEvent())
                         {
                             // Get the SystemTime from the event record XML 
@@ -188,6 +188,22 @@ namespace EventFinder
                             try
                             {
                                 Message = eventRecord.FormatDescription();
+                                if (Message == null)
+                                {
+                                    Message += "EventRecord.FormatDescription() returned a null value. This is usually because:\n";
+                                    Message += "    \"Either the component that raises this event is not installed on your local computer\n" +
+                                        "    or the installation is corrupted. You can install or repair the component on the local computer.\"\n";
+                                    Message += "The event likely originated on another system, below is the XML data associated with this event\n";
+                                    Message += "\n";
+                                    Message += XDocument.Parse(eventRecord.ToXml()).ToString();
+                                    // If the message body is null, it's because the DLL that created it is on another system and it can't be parsed in real time
+                                    // The below works, but we can do better!
+                                    // foreach (var node in xml.Descendants(ns + "Event")) 
+                                    //  {
+                                    //      Message += node.Value;
+                                    //      Message += "\n";
+                                    //  }
+                                }
                             }
                             catch
                             {
@@ -437,7 +453,6 @@ namespace EventFinder
                     }
 
                 }
-
                 records = records.OrderBy(x => x.SystemTime).ToList(); // Sort our records in chronological order
                 // and write them to a CSV
                 using (var writer = new StreamWriter(DesktopPath + "\\Logs_Runtime_" + RunTime + ".csv", append: true))
